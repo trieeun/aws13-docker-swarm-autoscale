@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  nginx:
+    image: 165749212250.dkr.ecr.ap-northeast-2.amazonaws.com/web-nginx:latest
+    deploy:
+      replicas: 2
+      placement:
+        constraints:
+          - node.role == worker
+      resources:
+        limits:
+          memory: 128m
+      update_config:
+        parallelism: 1
+        delay: 5s
+    networks:
+      - web
+
+  haproxy:
+    image: haproxy:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - /home/ubuntu/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+      resources:
+        limits:
+          memory: 64m
+    networks:
+      - web
+
+networks:
+  web:
+    external: true

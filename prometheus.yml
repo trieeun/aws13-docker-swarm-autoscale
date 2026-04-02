@@ -1,0 +1,33 @@
+global:
+  scrape_interval: 5s        # 5초마다 메트릭 수집
+  evaluation_interval: 5s    # 5초마다 Alert 규칙 평가
+
+scrape_configs:
+
+  # ─── Worker 1 cAdvisor (컨테이너 메트릭) ───
+  - job_name: 'cadvisor-worker1'
+    static_configs:
+      - targets: ['10.10.1.96:8080']
+        labels:
+          node: 'worker1'
+
+  # ─── Worker 2 cAdvisor (컨테이너 메트릭) ───
+  - job_name: 'cadvisor-worker2'
+    static_configs:
+      - targets: ['10.10.1.123:8080']
+        labels:
+          node: 'worker2'
+
+  # ─── Worker 1 Node Exporter (서버 메트릭) ───
+  - job_name: 'node-worker1'
+    static_configs:
+      - targets: ['10.10.1.96:9100']
+        labels:
+          node: 'worker1'
+
+  # ─── Worker 2 Node Exporter (서버 메트릭) ───
+  - job_name: 'node-worker2'
+    static_configs:
+      - targets: ['10.10.1.123:9100']
+        labels:
+          node: 'worker2'
